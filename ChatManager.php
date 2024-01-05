@@ -3,7 +3,7 @@
 class ChatManager {
     private $client;
     private $threadId;
-    private const API_KEY = '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';
+    private const API_KEY = 'YOUR-API-KEY';
 
 
     public function __construct() {
