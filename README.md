@@ -31,7 +31,6 @@ composer require guzzlehttp/guzzle
 - `verifyResponse.php`: Vérifie et récupère les réponses de l'assistant.
 - `ChatManager.php`: Fournit la logique pour communiquer avec l'API OpenAI.
 
-## Licence
-Ce projet est distribué sous la licence MIT.
+
 
 
