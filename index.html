@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #messageBox {
+            width: calc(100% - 20px);
+            height: 150px;
+            resize: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        #submitButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        #responseContainer {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>Assistant Chat</h2>
+        <form id="chatForm">
+            <textarea id="messageBox" placeholder="Entrez votre message ici" required></textarea>
+            <button id="submitButton" type="submit">Envoyer</button>
+        </form>
+        <div id="responseContainer"></div>
+    </div>
+    <a href="newConversation.php">Réinitialiser</a>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatForm = document.getElementById("chatForm");
+            const messageBox = document.getElementById("messageBox");
+            const submitButton = document.getElementById("submitButton");
+            const responseContainer = document.getElementById("responseContainer");
+
+            let isButtonEnabled = true; // Variable pour suivre l'état du bouton
+
+            chatForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // Empêcher la soumission par défaut du formulaire
+
+                if (!isButtonEnabled) {
+                    return; // Ne rien faire si le bouton est désactivé
+                }
+
+                const message = messageBox.value;
+                // Désactiver le bouton pendant l'envoi de la requête
+                submitButton.disabled = true;
+                console.log("Envoi du message");
+                // Envoyer la requête vers la route 'sendMessage.php' avec le message
+                fetch('sendMessage.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ message }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.success);
+                        console.log("Envoi avec succès en attente de vérification de la réponse");
+                        // Démarrer l'intervalle de vérification après une seconde
+                        setTimeout(startVerificationInterval, 1000);
+                    } else {
+                        responseContainer.innerHTML = "Échec de l'envoi du message.";
+                        // Réactiver le bouton en cas d'échec de l'envoi
+                        submitButton.disabled = false;
+                    }
+                });
+            });
+
+            function startVerificationInterval() {
+                console.log("Vérification");
+
+                // Lancer un intervalle de vérification vers la route 'verifyReponse' chaque seconde
+                const verificationInterval = setInterval(function () {
+                    fetch('verifyReponse.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log("OK");
+                            console.log(data);
+                            // Afficher la réponse dans le conteneur
+                            responseContainer.innerHTML = data.response;
+                            clearInterval(verificationInterval); // Arrêter l'intervalle une fois la réponse reçue
+                            // Réactiver le bouton une fois la réponse reçue
+                            submitButton.disabled = false;
+                        } else {
+                            console.log(data);
+                        }
+                    });
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
