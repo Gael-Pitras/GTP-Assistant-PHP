@@ -4,7 +4,7 @@ class ChatManager {
     private $client;
     private $threadId;
     private const API_KEY = 'YOUR-API-KEY';
-    private const ASSISTANT_ID = 'YOUR-ASSIST-KEY';
+    private const ASSISTANT_ID = 'YOUR-ASSIST-ID';
 
     public function __construct() {
         require 'vendor/autoload.php';
