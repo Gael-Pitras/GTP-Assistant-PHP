@@ -4,7 +4,7 @@ class ChatManager {
     private $client;
     private $threadId;
     private const API_KEY = 'YOUR-API-KEY';
-
+    private const ASSISTANT_ID = 'YOUR-ASSIST-KEY';
 
     public function __construct() {
         require 'vendor/autoload.php';
@@ -36,7 +36,7 @@ class ChatManager {
         $this->client->threads()->runs()->create(
             threadId: $this->threadId, 
             parameters: [
-                'assistant_id' => 'asst_rQMWKtCmMDPpbpi8yCYBRMbE',
+                'assistant_id' => self::ASSISTANT_ID,
             ]
         );
     }

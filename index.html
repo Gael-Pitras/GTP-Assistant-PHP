@@ -78,6 +78,15 @@
 
             let isButtonEnabled = true; // Variable pour suivre l'état du bouton
 
+            messageBox.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && !event.shiftKey) { // Vérifie si la touche 'Enter' est pressée sans 'Shift'
+                    event.preventDefault(); // Empêche l'insertion d'une nouvelle ligne
+                    if (messageBox.value.trim() !== "") { // Vérifie si le textarea n'est pas vide
+                        chatForm.dispatchEvent(new Event("submit")); // Déclenche la soumission du formulaire
+                    }
+                }
+            });
+
             chatForm.addEventListener("submit", function (event) {
                 event.preventDefault(); // Empêcher la soumission par défaut du formulaire
 
@@ -87,6 +96,15 @@
 
                 const message = messageBox.value;
                 // Désactiver le bouton pendant l'envoi de la requête
+                var newElement = document.createElement("div");
+                var newBold = document.createElement("b");
+                newBold.textContent = "Vous: ";
+               
+                newElement.textContent = message;
+                newElement.prepend(newBold);
+                // Ajout de ce nouvel élément à responseContainer
+                responseContainer.appendChild(newElement);
+                messageBox.value = "";
                 submitButton.disabled = true;
                 console.log("Envoi du message");
                 // Envoyer la requête vers la route 'sendMessage.php' avec le message
@@ -105,7 +123,13 @@
                         // Démarrer l'intervalle de vérification après une seconde
                         setTimeout(startVerificationInterval, 1000);
                     } else {
-                        responseContainer.innerHTML = "Échec de l'envoi du message.";
+                        // Création d'un nouvel élément, par exemple un paragraphe
+                        var newElement = document.createElement("p");
+                        newElement.textContent = "Échec de l'envoi du message.";
+
+                        // Ajout de ce nouvel élément à responseContainer
+                        responseContainer.appendChild(newElement);
+
                         // Réactiver le bouton en cas d'échec de l'envoi
                         submitButton.disabled = false;
                     }
@@ -124,7 +148,17 @@
                             console.log("OK");
                             console.log(data);
                             // Afficher la réponse dans le conteneur
-                            responseContainer.innerHTML = data.response;
+                            // Création d'un nouvel élément, par exemple un paragraphe
+                            var newElement = document.createElement("div");
+                            var newBold = document.createElement("b");
+                            newBold.textContent = "Assistant: ";
+                           
+                            newElement.textContent = data.response;
+                            newElement.prepend(newBold);
+                            // Ajout de ce nouvel élément à responseContainer
+                            responseContainer.appendChild(newElement);
+
+                          
                             clearInterval(verificationInterval); // Arrêter l'intervalle une fois la réponse reçue
                             // Réactiver le bouton une fois la réponse reçue
                             submitButton.disabled = false;
@@ -132,7 +166,7 @@
                             console.log(data);
                         }
                     });
-                }, 1000);
+                }, 3000);
             }
         });
     </script>
