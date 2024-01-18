@@ -2,7 +2,7 @@
 # Chat avec l'Assistant OpenAI
 
 ## Description
-Ce projet implémente un système de chat simple permettant aux utilisateurs de communiquer avec un assistant virtuel développé par OpenAI. Le backend est écrit en PHP et utilise la bibliothèque cliente OpenAI pour interagir avec l'assistant.
+Ce projet implémente un système de chat simple permettant aux utilisateurs de communiquer avec un assistant virtuel développé (GPTs) via OpenAI. Le backend est écrit en PHP et utilise la bibliothèque cliente OpenAI pour interagir avec l'assistant.
 
 ## Fonctionnalités
 - Démarrage d'une nouvelle conversation avec l'assistant OpenAI.
